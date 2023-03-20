@@ -13,6 +13,7 @@ import Textarea from "../components/Textarea";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function Event() {
+  const [roomId, setRoomId] = useState(1);
   const [rooms, setRooms] = useState([]);
   const [errors, setErrors] = useState([]);
   
@@ -21,7 +22,7 @@ export default function Event() {
     return day !== 0 && day !== 6;
   };
 
-  const [room_id, setRoom] = useState("");
+  const [room_id, setRoom] = useState(1);
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [user, setUser] = useState("");
@@ -68,7 +69,7 @@ export default function Event() {
       setTitle("");
       setType("");
       setUser("");
-      setDate("");
+      setDate(new Date());
       setStart("");
       setEnd("");
       setRepetation("");
@@ -82,7 +83,7 @@ export default function Event() {
 
   const getBooking = async (e) => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/booking");
+      const response = await axios.get(`http://127.0.0.1:8000/api/checkbook/${roomId}`);
       setBookings(response.data.data);
     } catch (e) {
       console.log(e.message);
@@ -92,7 +93,7 @@ export default function Event() {
   useEffect(() => {
     getRooms();
     getBooking();
-  }, [date]);
+  }, [date,roomId]);
 
   return (
     <PlaceContentCenter>
@@ -109,11 +110,11 @@ export default function Event() {
                   name="room_id"
                   id="room_id"
                   value={room_id}
-                  onChange={(e) => setRoom(e.target.value)}
+                  onChange={(e) => {setRoom(e.target.value); setRoomId(e.target.value)}}
                 >
-                  <option disabled={true} value="">
+                  {/* <option disabled={true} value="">
                     --Choose and option--
-                  </option>
+                  </option> */}
                   {rooms
                     ? rooms.map((room) => (
                         <option value={room.id} key={room.id}>

@@ -22,8 +22,8 @@ class BookingSingleResource extends JsonResource
             'type' => $this->type,
             'user' => $this->user,
             'date' => $this->date,
-            'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
+            'start' => $this->start,
+            'end' => $this->end,
             'repetation' => $this->repetation,
             'description' => $this->description,
             'status' => $this->status
