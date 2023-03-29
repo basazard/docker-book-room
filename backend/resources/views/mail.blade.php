@@ -9,15 +9,19 @@
 </head>
 
 <body>
-    <p>User : {{ $booking->user }}</p>
-    <p>Booking Title : {{ $booking->title }}</p>
+    <p>Room : {{ $booking->room->name }}</p>
     <p>Date : {{ $booking->date }}</p>
+    <p>Type : {{ $booking->type }}</p>
+    <p>User : {{ $booking->user }}</p>
+    <p>Title : {{ $booking->title }}</p>
     <p>Start Time : {{ $booking->start }}</p>
     <p>End Time : {{ $booking->end }}</p>
+    <p>Description : {{ $booking->description }}</p>
 
-    <form action="{{ route('booking.update', $booking->id) }}" method="post">
+    <form action="{{ route('booking.update', $booking->id) }}" method="POST">
         @csrf
         @method('PUT')
+        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
         <button type="submit">Active Schedule</button>
     </form>
 

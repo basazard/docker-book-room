@@ -1,0 +1,71 @@
+version: '3.7'
+services: 
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_DATABASE: book_room
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      MAIL_MAILER: smtp
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: basazard@gmail.com
+      MAIL_PASSWORD: ntgsqbvvgawgirtd
+      MAIL_ENCRYPTION: tls
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - db
+    networks:
+      - app
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app/frontend
+    depends_on:
+      - backend
+    networks:
+      - app
+
+  db:
+    image: mysql:5.7.32
+    environment:
+      MYSQL_DATABASE: book_room
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/mysql
+    networks:
+      - app
+
+  queue:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_DATABASE: book_room
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - db
+    networks:
+      - app
+    command: php artisan queue:work --tries=3
+
+networks:
+  app:
+    driver: bridge
